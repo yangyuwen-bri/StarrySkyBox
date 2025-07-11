@@ -75,7 +75,7 @@ CREATE INDEX IF NOT EXISTS idx_media_files_used ON media_files(is_used);
 
 -- 插入项目设置数据
 INSERT INTO project_settings (setting_key, setting_value, description) VALUES
-('access_password_hash', '$2b$10$hNOS1wWVGqpq.xXbCiSCLOY1YhwEkA2R2Qb/RnBIwP3x5J8eY2kKm', '访问密码的 bcrypt 哈希值（原密码：20241008）'),
+('access_password_hash', '$2b$10$WHwbqY5U3M5XwUq/obsHlOa8VGrxwIpb2BVzslgayeCpDHmn2dRuK', '访问密码的 bcrypt 哈希值'),
 ('project_title', '星空宝盒', '项目标题'),
 ('theme_color', '#1a1a2e', '主题颜色'),
 ('max_stars_display', '50', '最大同时显示星星数量')
