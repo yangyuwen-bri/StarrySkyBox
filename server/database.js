@@ -16,10 +16,15 @@ const dbConfig = process.env.DATABASE_URL ? {
 
 const pool = new Pool({
     ...dbConfig,
-    // 连接池配置
-    max: 20,
-    connectionTimeoutMillis: 2000,
+    // 连接池配置优化 - 适配Vercel环境
+    max: 3,  // Vercel函数并发限制
+    connectionTimeoutMillis: 10000,  // 增加连接超时
     idleTimeoutMillis: 30000,
+    query_timeout: 15000,  // 查询超时
+    statement_timeout: 15000,  // 语句超时
+    // Vercel环境优化
+    keepAlive: true,
+    keepAliveInitialDelayMillis: 10000,
 });
 
 // 数据库查询函数

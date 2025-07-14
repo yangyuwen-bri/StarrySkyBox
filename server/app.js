@@ -251,7 +251,56 @@ app.get('/db-status', async (req, res) => {
     }
 });
 
-
+// 数据库连接测试API
+app.get('/test-db', async (req, res) => {
+    try {
+        console.log('🔍 开始数据库连接测试...');
+        console.log('Environment:', process.env.NODE_ENV);
+        console.log('DATABASE_URL存在:', !!process.env.DATABASE_URL);
+        
+        const testResult = {
+            timestamp: new Date().toISOString(),
+            environment: process.env.NODE_ENV,
+            hasDatabaseUrl: !!process.env.DATABASE_URL,
+            connectionTest: null,
+            dataTest: null,
+            error: null
+        };
+        
+        // 测试数据库连接
+        const connected = await db.testConnection();
+        testResult.connectionTest = connected;
+        console.log('数据库连接测试:', connected);
+        
+        if (connected) {
+            // 测试获取数据
+            console.log('测试获取私密星星数据...');
+            const privateStars = await db.getPrivateStars();
+            testResult.dataTest = {
+                success: true,
+                count: privateStars.length,
+                firstStar: privateStars[0] || null
+            };
+            console.log('私密星星数量:', privateStars.length);
+        }
+        
+        res.json(testResult);
+    } catch (error) {
+        console.error('❌ 数据库测试错误:', error);
+        res.json({
+            timestamp: new Date().toISOString(),
+            environment: process.env.NODE_ENV,
+            hasDatabaseUrl: !!process.env.DATABASE_URL,
+            connectionTest: false,
+            dataTest: null,
+            error: {
+                message: error.message,
+                code: error.code,
+                name: error.name
+            }
+        });
+    }
+});
 
 // 健康检查路由
 app.get('/health', (req, res) => {
