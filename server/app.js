@@ -251,6 +251,66 @@ app.get('/db-status', async (req, res) => {
     }
 });
 
+// 诊断API - 帮助调试密码验证问题
+app.get('/debug-password', async (req, res) => {
+    try {
+        console.log('🔍 开始密码验证诊断...');
+        
+        const diagnosis = {
+            timestamp: new Date().toISOString(),
+            environment: process.env.NODE_ENV,
+            hasDatabase: !!process.env.DATABASE_URL,
+            databaseConnection: false,
+            projectSettings: null,
+            passwordHash: null,
+            testResults: {}
+        };
+        
+        // 测试数据库连接
+        try {
+            diagnosis.databaseConnection = await db.testConnection();
+            console.log('数据库连接状态:', diagnosis.databaseConnection);
+        } catch (error) {
+            console.error('数据库连接测试失败:', error);
+        }
+        
+        // 获取项目配置
+        if (diagnosis.databaseConnection) {
+            try {
+                const settings = await db.getProjectSettings();
+                diagnosis.projectSettings = settings ? Object.keys(settings) : null;
+                diagnosis.passwordHash = settings?.access_password_hash || settings?.password_hash || 'NOT_FOUND';
+                console.log('项目配置键:', diagnosis.projectSettings);
+                console.log('密码哈希存在:', !!diagnosis.passwordHash);
+            } catch (error) {
+                console.error('获取项目配置失败:', error);
+                diagnosis.error = error.message;
+            }
+        }
+        
+        // 测试bcrypt验证
+        if (diagnosis.passwordHash && diagnosis.passwordHash !== 'NOT_FOUND') {
+            try {
+                const bcrypt = require('bcrypt');
+                diagnosis.testResults.bcryptTest = await bcrypt.compare('20241008', diagnosis.passwordHash);
+                console.log('bcrypt测试结果:', diagnosis.testResults.bcryptTest);
+            } catch (error) {
+                console.error('bcrypt测试失败:', error);
+                diagnosis.testResults.bcryptError = error.message;
+            }
+        }
+        
+        res.json(diagnosis);
+    } catch (error) {
+        console.error('❌ 诊断过程错误:', error);
+        res.status(500).json({
+            error: '诊断失败',
+            message: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
+});
+
 // 健康检查路由
 app.get('/health', (req, res) => {
     res.json({
