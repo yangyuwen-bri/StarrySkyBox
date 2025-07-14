@@ -834,7 +834,6 @@
         
         <!-- 两朵花 -->
         <div class="flower sheep-flower" id="sheep-flower">🌼</div>
-        <div class="flower star-flower" id="star-flower">✨</div>
         
         <!-- 密码输入容器 -->
         <div class="password-container" id="password-container">
@@ -863,8 +862,6 @@
     <script>
         // 全局变量
         let isPrivateUnlocked = false;
-        let sheepFlowerClicked = false;
-        let starFlowerClicked = false;
 
         // 页面加载完成后启动
         document.addEventListener('DOMContentLoaded', function() {
@@ -1205,28 +1202,11 @@
         // 设置花朵交互
         function setupFlowerInteraction() {
             const sheepFlower = document.getElementById('sheep-flower');
-            const starFlower = document.getElementById('star-flower');
 
             sheepFlower.addEventListener('click', () => {
-                sheepFlowerClicked = true;
                 sheepFlower.classList.add('activated');
-                checkBothFlowersClicked();
+                document.getElementById('password-container').classList.add('active');
             });
-
-            starFlower.addEventListener('click', () => {
-                starFlowerClicked = true;
-                starFlower.classList.add('activated');
-                checkBothFlowersClicked();
-            });
-        }
-
-        // 检查两朵花是否都被点击
-        function checkBothFlowersClicked() {
-            if (sheepFlowerClicked && starFlowerClicked) {
-                setTimeout(() => {
-                    document.getElementById('password-container').classList.add('active');
-                }, 500);
-            }
         }
 
         // 设置密码验证
@@ -1290,10 +1270,7 @@
         // 关闭密码对话框
         function closePasswordDialog() {
             document.getElementById('password-container').classList.remove('active');
-            sheepFlowerClicked = false;
-            starFlowerClicked = false;
             document.getElementById('sheep-flower').classList.remove('activated');
-            document.getElementById('star-flower').classList.remove('activated');
             document.getElementById('password-input').value = '';
         }
 
