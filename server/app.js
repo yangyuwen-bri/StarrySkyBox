@@ -11,6 +11,9 @@ const db = require('./database'); // 新增：数据库模块
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 设置 trust proxy 以支持 Vercel 部署
+app.set('trust proxy', 1);
+
 // 安全中间件
 app.use(helmet({
     contentSecurityPolicy: false, // 暂时禁用CSP，方便开发

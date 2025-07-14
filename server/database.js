@@ -121,12 +121,14 @@ async function validatePassword(inputPassword) {
     try {
         const bcrypt = require('bcrypt');
         const settings = await getProjectSettings();
-        if (!settings || !settings.access_password_hash) {
+        if (!settings || !settings.access_password_hash && !settings.password_hash) {
             console.error('无法获取密码哈希');
             return false;
         }
         
-        return await bcrypt.compare(inputPassword, settings.access_password_hash);
+        // 支持两种字段名：access_password_hash 和 password_hash
+        const passwordHash = settings.access_password_hash || settings.password_hash;
+        return await bcrypt.compare(inputPassword, passwordHash);
     } catch (err) {
         console.error('密码验证失败:', err);
         return false;
