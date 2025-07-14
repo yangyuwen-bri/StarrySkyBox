@@ -243,7 +243,7 @@ const privateContent = {
             id: 'private-nft-center',
             title: 'A Picture to My Friend',
             content: '💝 来自幸运星的珍贵礼物\n\n这是一只叫做"可乐"的小狗，它曾陪伴我的小笔友度过一段快乐的时光。当我收到这幅画时，我被深深感动了。\n\n这不仅仅是一幅画，更是我们友谊的见证，是一份珍贵的回忆。现在它变成了一颗永恒的星星，永远闪耀在我们的星空中。',
-            position: { top: "48%", left: "48%" },
+            position: { top: "65%", left: "50%" },
             size: "large",
             color: "special",
             type: 'nft',

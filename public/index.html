@@ -1403,10 +1403,14 @@
                 });
                 const result = await response.json();
 
+                console.log('🔍 私密星星数据源:', result.source || 'unknown');
+                console.log('🔍 私密星星数据:', result.privateStars);
+
                 if (result.success) {
                     const container = document.getElementById('private-stars');
                     
                     result.privateStars.forEach((starData, index) => {
+                        console.log(`🔍 星星 ${index} 位置:`, starData.position);
                         setTimeout(() => {
                             const star = createStar(starData, index);
                             star.classList.add('private');
@@ -1440,7 +1444,7 @@
                             text-align: center;
                             box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
                         `;
-                        notification.textContent = '✨ 私密星空已解锁！发现了真实的NFT回忆 ✨';
+                        notification.textContent = `✨ 私密星空已解锁！数据源: ${result.source || 'unknown'} ✨`;
                         document.body.appendChild(notification);
                         
                         setTimeout(() => {
